@@ -21,13 +21,20 @@ class Engine:
         encoding: Encoding = self.tokenizer.encode(response_content)
         logger.info(f"{type(encoding.ids[0])=}")
 
-        output_tokens: list[int] = await self.model.generate(encoding.ids)
+        output_tokens = await self.model.generate(encoding.ids)
 
         final_content: str = self.tokenizer.decode(output_tokens)
 
-        usage_stats = UsageStats(prompt_tokens=0, completion_tokens=0, total_tokens=0)
+        usage_stats = self._calculate_usage_stats(input_tokens=encoding.ids, output_tokens=output_tokens)
         engine_response = EngineResponse(req.model, prompt_response=final_content, usage_stats=usage_stats)
         return engine_response
+
+    def _calculate_usage_stats(self, input_tokens: list[int], output_tokens: list[int]) -> UsageStats:
+        prompt_tokens = len(input_tokens)
+        completion_tokens = len(output_tokens)
+        total_tokens = prompt_tokens + completion_tokens
+        usage_stats = UsageStats(prompt_tokens=prompt_tokens, completion_tokens=completion_tokens, total_tokens=total_tokens)
+        return usage_stats
 
 
 def get_engine(tokenizer: Tokenizer = Depends(get_tokenizer), model: Model = Depends(get_model)) -> Engine:

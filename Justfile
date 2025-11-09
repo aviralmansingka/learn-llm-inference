@@ -29,7 +29,7 @@ clean:
 req:
   xh POST ${APP_URL}/v1/chat/completions \
     model=gpt-4 \
-    messages:='[{"role": "user", "content": "Hello"}]' \
+    messages:='[{"role": "user", "content": "Hello, can you tell me a joke?"}]' \
     temperature:=0.7
 
 # Show all available commands
