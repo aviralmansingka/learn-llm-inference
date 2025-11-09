@@ -1,0 +1,30 @@
+[project]
+name = "modal-llm"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "aviralmansingka", email = "aviralmansingka@gmail.com" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi[standard]>=0.121.0",
+    "loguru>=0.7.3",
+    "modal>=1.2.1",
+    "numpy>=2.3.4",
+    "tokenizers>=0.22.1",
+    "torch>=2.9.0",
+    "transformers>=4.57.1",
+]
+
+[project.scripts]
+modal-llm = "modal_llm:main"
+
+[build-system]
+requires = ["uv_build>=0.8.19,<0.9.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.0",
+]
