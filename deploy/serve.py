@@ -14,8 +14,8 @@ with image.imports():
     volumes={
         "/root/.cache/huggingface": hf_cache_vol,
     },
-)  # pyright: ignore[reportUnknownMemberType]
-@modal.asgi_app()  # pyright: ignore[reportUnknownMemberType]
+)
+@modal.asgi_app()
 def modal_llm():
     from modal_llm.web.fastapi import asgi_app
 
