@@ -5,9 +5,6 @@ app = modal.App("modal-llm")
 image = modal.Image.debian_slim().uv_sync().add_local_python_source("modal_llm")
 hf_cache_vol = modal.Volume.from_name("huggingface-cache", create_if_missing=True)
 
-with image.imports():
-    import torch.nn as nn
-
 @app.function(
     gpu="a100",
     image=image,
