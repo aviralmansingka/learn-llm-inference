@@ -1,13 +1,11 @@
-from collections.abc import AsyncGenerator
 from fastapi import Depends
 from tokenizers import Encoding, Tokenizer
+
+from loguru import logger
 
 from modal_llm.runtime.models.engine import EngineRequest, EngineResponse, UsageStats
 from modal_llm.runtime.models.model import Model, get_model
 from modal_llm.runtime.services.tokenizer import get_tokenizer
-
-from loguru import logger
-
 
 
 class Engine:
@@ -19,9 +17,7 @@ class Engine:
         response_content = req.messages[-1].content
 
         encoding: Encoding = self.tokenizer.encode(response_content)
-
         output_tokens = await self.model.generate(encoding.ids)
-
         final_content: str = self.tokenizer.decode(output_tokens)
 
         usage_stats = self._calculate_usage_stats(input_tokens=encoding.ids, output_tokens=output_tokens)
@@ -37,5 +33,6 @@ class Engine:
 
 
 def get_engine(tokenizer: Tokenizer = Depends(get_tokenizer), model: Model = Depends(get_model)) -> Engine:
+    logger.info("Creating Engine(tokenizer, model)")
     return Engine(tokenizer=tokenizer, model=model)
 

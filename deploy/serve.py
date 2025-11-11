@@ -9,6 +9,7 @@ with image.imports():
     import torch.nn as nn
 
 @app.function(
+    gpu="a100",
     image=image,
     volumes={
         "/root/.cache/huggingface": hf_cache_vol,
