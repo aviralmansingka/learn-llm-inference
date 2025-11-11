@@ -19,7 +19,6 @@ class Engine:
         response_content = req.messages[-1].content
 
         encoding: Encoding = self.tokenizer.encode(response_content)
-        logger.info(f"{type(encoding.ids[0])=}")
 
         output_tokens = await self.model.generate(encoding.ids)
 
