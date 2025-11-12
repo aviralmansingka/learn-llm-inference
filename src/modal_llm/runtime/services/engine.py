@@ -1,3 +1,4 @@
+from functools import cache
 from fastapi import Depends
 from tokenizers import Encoding, Tokenizer
 
@@ -49,7 +50,10 @@ class Engine:
     
 
 
-def get_engine(tokenizer: Tokenizer = Depends(get_tokenizer), model: Model = Depends(get_model)) -> Engine:
+@cache
+def get_engine(
+        tokenizer: Tokenizer = Depends(get_tokenizer), # pyright: ignore[reportCallInDefaultInitializer]
+        model: Model = Depends(get_model), # pyright: ignore[reportCallInDefaultInitializer]
+) -> Engine:
     logger.info("Creating Engine(tokenizer, model)")
     return Engine(tokenizer=tokenizer, model=model)
-

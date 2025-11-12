@@ -1,8 +1,8 @@
-from tokenizers import Tokenizer, Encoding
+from functools import cache
+from tokenizers import Tokenizer
 from loguru import logger
 
-from modal_llm.runtime.models import tokenizer
-
+@cache
 def get_tokenizer() -> Tokenizer:
     logger.info("Creating Tokenizer()")
     tokenizer: Tokenizer = Tokenizer.from_pretrained("Qwen/Qwen3-0.6B")
@@ -12,6 +12,5 @@ def get_tokenizer() -> Tokenizer:
     
     # Ensure the pad token is set
     tokenizer.enable_padding(pad_id=tokenizer.token_to_id("<pad>"), pad_token="<pad>")
-
 
     return tokenizer
