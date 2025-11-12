@@ -1,11 +1,13 @@
 from functools import cache
+from fastapi import Depends
 from loguru import logger
 import torch
-from transformers import AutoModelForCausalLM, 
+from transformers import AutoModelForCausalLM
+from modal_llm.config import Settings, get_settings
 
 class Model:
-    def __init__(self):
-        self.model = AutoModelForCausalLM.from_pretrained("Qwen/Qwen3-0.6B")
+    def __init__(self, settings: Settings):
+        self.model = AutoModelForCausalLM.from_pretrained(settings.model_name)
         self.device: str = ("cuda" if torch.cuda.is_available() else "cpu")
         self.model.to(self.device)
 
@@ -23,6 +25,6 @@ class Model:
         return output.squeeze(0).tolist()
 
 @cache
-def get_model() -> Model:
+def get_model(settings: Settings = Depends(get_settings)) -> Model:  # pyright: ignore[reportCallInDefaultInitializer]
     logger.info("Creating Model()")
-    return Model()
+    return Model(settings)

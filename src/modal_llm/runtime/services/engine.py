@@ -5,14 +5,14 @@ from tokenizers import Encoding, Tokenizer
 from loguru import logger
 
 from modal_llm.runtime.models.engine import EngineRequest, EngineResponse, UsageStats
-from modal_llm.runtime.models.model import Model, get_model
-from modal_llm.runtime.services.tokenizer import get_tokenizer
+from modal_llm.runtime.services.model import Model, get_model
+from modal_llm.runtime.services.tokenizer import TokenizerManager, get_tokenizer_manager
 
 
 class Engine:
-    def __init__(self, tokenizer: Tokenizer, model: Model):
-        self.tokenizer = tokenizer
-        self.model= model
+    def __init__(self, tokenizer: TokenizerManager, model: Model):
+        self.tokenizer: TokenizerManager = tokenizer
+        self.model: Model= model
 
     @staticmethod
     def format_chat(messages: list[dict]) -> str:
@@ -47,12 +47,10 @@ class Engine:
         total_tokens = prompt_tokens + completion_tokens
         usage_stats = UsageStats(prompt_tokens=prompt_tokens, completion_tokens=completion_tokens, total_tokens=total_tokens)
         return usage_stats
-    
-
 
 @cache
 def get_engine(
-        tokenizer: Tokenizer = Depends(get_tokenizer), # pyright: ignore[reportCallInDefaultInitializer]
+        tokenizer: TokenizerManager = Depends(get_tokenizer_manager), # pyright: ignore[reportCallInDefaultInitializer]
         model: Model = Depends(get_model), # pyright: ignore[reportCallInDefaultInitializer]
 ) -> Engine:
     logger.info("Creating Engine(tokenizer, model)")

@@ -1,7 +1,9 @@
+from typing import Annotated
 from fastapi import Depends, FastAPI
 
 from modal_llm.runtime.models.engine import EngineRequest, EngineResponse
 from modal_llm.runtime.services.engine import Engine, get_engine
+from modal_llm.config import get_settings, Settings
 
 from modal_llm.web.models import ChatCompletionRequest, ChatCompletionResponse, convert_from_engine, convert_to_engine
 
