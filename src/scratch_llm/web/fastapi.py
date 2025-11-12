@@ -1,11 +1,10 @@
 from typing import Annotated
 from fastapi import Depends, FastAPI
 
-from modal_llm.runtime.models.engine import EngineRequest, EngineResponse
-from modal_llm.runtime.services.engine import Engine, get_engine
-from modal_llm.config import get_settings, Settings
+from scratch_llm.runtime.models.engine import EngineRequest, EngineResponse
+from scratch_llm.runtime.services.engine import Engine, get_engine
 
-from modal_llm.web.models import ChatCompletionRequest, ChatCompletionResponse, convert_from_engine, convert_to_engine
+from scratch_llm.web.models import ChatCompletionRequest, ChatCompletionResponse, convert_from_engine, convert_to_engine
 
 from loguru import logger
 

@@ -2,18 +2,24 @@ from functools import cache
 from typing import Optional
 from tokenizers import Encoding, Tokenizer
 from loguru import logger
-from modal_llm.config import Settings, get_settings
+from scratch_llm.config import Settings, get_settings
 from fastapi import Depends
 
 class TokenizerManager:
     def __init__(self, tokenizer: Tokenizer):
         self.tokenizer = tokenizer
 
-    def tokenize(self, prompt: str, max_length: Optional[int] = None) -> Encoding:
+    def tokenize(self, prompt: str, max_length: Optional[int] = None) -> tuple[Encoding, list[int]]:
         encoding: Encoding = self.tokenizer.encode(prompt)
         if max_length:
             self.tokenizer.enable_truncation(max_length=max_length)
-        return encoding
+
+        # FIX FOR 
+        # The attention mask is not set and cannot be inferred from input because pad token 
+        # is same as eos token. As a consequence, you may observe unexpected behavior. 
+        # Please pass your input's `attention_mask` to obtain reliable results
+        attention_mask = [1 if token_id != self.tokenizer.token_to_id("<pad>") else 0 for token_id in encoding.ids]
+        return encoding, attention_mask
 
     def detokenize(self, token_ids: list[int]) -> str:
         return self.tokenizer.decode(token_ids)

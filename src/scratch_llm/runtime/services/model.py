@@ -3,7 +3,7 @@ from fastapi import Depends
 from loguru import logger
 import torch
 from transformers import AutoModelForCausalLM
-from modal_llm.config import Settings, get_settings
+from scratch_llm.config import Settings, get_settings
 
 class Model:
     def __init__(self, settings: Settings):

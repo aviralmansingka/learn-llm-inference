@@ -696,41 +696,6 @@ wheels = [
 ]
 
 [[package]]
-name = "modal-llm"
-version = "0.1.0"
-source = { editable = "." }
-dependencies = [
-    { name = "fastapi", extra = ["standard"] },
-    { name = "loguru" },
-    { name = "modal" },
-    { name = "numpy" },
-    { name = "pydantic-settings" },
-    { name = "tokenizers" },
-    { name = "torch" },
-    { name = "transformers" },
-]
-
-[package.dev-dependencies]
-dev = [
-    { name = "pytest" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "fastapi", extras = ["standard"], specifier = ">=0.121.0" },
-    { name = "loguru", specifier = ">=0.7.3" },
-    { name = "modal", specifier = ">=1.2.1" },
-    { name = "numpy", specifier = ">=2.3.4" },
-    { name = "pydantic-settings", specifier = ">=2.12.0" },
-    { name = "tokenizers", specifier = ">=0.22.1" },
-    { name = "torch", specifier = ">=2.9.0" },
-    { name = "transformers", specifier = ">=4.57.1" },
-]
-
-[package.metadata.requires-dev]
-dev = [{ name = "pytest", specifier = ">=9.0.0" }]
-
-[[package]]
 name = "mpmath"
 version = "1.3.0"
 source = { registry = "https://pypi.org/simple" }
@@ -1463,6 +1428,41 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/59/a7/e2158e17bbe57d104f0abbd95dff60dda916cf277c9f9663b4bf9bad8b6e/safetensors-0.6.2-cp38-abi3-win32.whl", hash = "sha256:cab75ca7c064d3911411461151cb69380c9225798a20e712b102edda2542ddb1", size = 308926, upload-time = "2025-08-08T13:14:01.095Z" },
     { url = "https://files.pythonhosted.org/packages/2c/c3/c0be1135726618dc1e28d181b8c442403d8dbb9e273fd791de2d4384bcdd/safetensors-0.6.2-cp38-abi3-win_amd64.whl", hash = "sha256:c7b214870df923cbc1593c3faee16bec59ea462758699bd3fee399d00aac072c", size = 320192, upload-time = "2025-08-08T13:13:59.467Z" },
 ]
+
+[[package]]
+name = "scratch-llm"
+version = "0.1.0"
+source = { editable = "." }
+dependencies = [
+    { name = "fastapi", extra = ["standard"] },
+    { name = "loguru" },
+    { name = "modal" },
+    { name = "numpy" },
+    { name = "pydantic-settings" },
+    { name = "tokenizers" },
+    { name = "torch" },
+    { name = "transformers" },
+]
+
+[package.dev-dependencies]
+dev = [
+    { name = "pytest" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "fastapi", extras = ["standard"], specifier = ">=0.121.0" },
+    { name = "loguru", specifier = ">=0.7.3" },
+    { name = "modal", specifier = ">=1.2.1" },
+    { name = "numpy", specifier = ">=2.3.4" },
+    { name = "pydantic-settings", specifier = ">=2.12.0" },
+    { name = "tokenizers", specifier = ">=0.22.1" },
+    { name = "torch", specifier = ">=2.9.0" },
+    { name = "transformers", specifier = ">=4.57.1" },
+]
+
+[package.metadata.requires-dev]
+dev = [{ name = "pytest", specifier = ">=9.0.0" }]
 
 [[package]]
 name = "sentry-sdk"
