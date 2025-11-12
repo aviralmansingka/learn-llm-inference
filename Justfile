@@ -32,6 +32,27 @@ req:
     messages:='[{"role": "user", "content": "Hello, can you tell me a joke?"}]' \
     temperature:=0.7
 
+# Multi-turn conversation request 1
+req1:
+    xh POST ${APP_URL}/v1/chat/completions \
+        model=gpt-4 \
+        messages:='[{"role": "system", "content": "You are a helpful assistant."}, \
+                   {"role": "user", "content": "Hello, who won the World Cup in 2018?"}, \
+                   {"role": "assistant", "content": "France won the World Cup in 2018."}, \
+                   {"role": "user", "content": "Who was the top scorer?"}]' \
+        temperature:=0.7
+
+# Multi-turn conversation request 2
+req2:
+    xh POST ${APP_URL}/v1/chat/completions \
+        model=gpt-4 \
+        messages:='[{"role": "system", "content": "You are a helpful assistant."}, \
+                   {"role": "user", "content": "What is the capital of Japan?"}, \
+                   {"role": "assistant", "content": "The capital of Japan is Tokyo."}, \
+                   {"role": "user", "content": "Can you tell me a fun fact about Tokyo?"}]' \
+        temperature:=0.7
+
+
 # Show all available commands
 help:
     @just --list

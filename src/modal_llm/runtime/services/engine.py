@@ -13,11 +13,27 @@ class Engine:
         self.tokenizer = tokenizer
         self.model= model
 
-    async def process(self, req: EngineRequest) -> EngineResponse: 
-        response_content = req.messages[-1].content
+    @staticmethod
+    def format_chat(messages: list[dict]) -> str:
+        # TODO append to list and use join for better performance
+        formatted = ""
+        for message in messages:
+            role = message.role
+            content = message.content
+            formatted += f"{role}: {content}\n"
+        return formatted.strip()
 
+    async def process(self, req: EngineRequest) -> EngineResponse: 
+        response_content = Engine.format_chat(req.messages)
         encoding: Encoding = self.tokenizer.encode(response_content)
-        output_tokens = await self.model.generate(encoding.ids)
+
+        # FIX FOR 
+        # The attention mask is not set and cannot be inferred from input because pad token 
+        # is same as eos token. As a consequence, you may observe unexpected behavior. 
+        # Please pass your input's `attention_mask` to obtain reliable results
+        attention_mask = [1 if token_id != self.tokenizer.token_to_id("<pad>") else 0 for token_id in encoding.ids]
+
+        output_tokens = await self.model.generate(encoding.ids, attention_mask=attention_mask)
         final_content: str = self.tokenizer.decode(output_tokens)
 
         usage_stats = self._calculate_usage_stats(input_tokens=encoding.ids, output_tokens=output_tokens)
@@ -30,6 +46,7 @@ class Engine:
         total_tokens = prompt_tokens + completion_tokens
         usage_stats = UsageStats(prompt_tokens=prompt_tokens, completion_tokens=completion_tokens, total_tokens=total_tokens)
         return usage_stats
+    
 
 
 def get_engine(tokenizer: Tokenizer = Depends(get_tokenizer), model: Model = Depends(get_model)) -> Engine:
