@@ -6,7 +6,7 @@ serve:
 
 # Run FastAPI development server
 dev:
-    uv run fastapi dev src/modal_llm/web/fastapi.py
+    uv run fastapi dev src/scratch_llm/web/fastapi.py
 
 # Build the project (compile, type check, etc.)
 build:

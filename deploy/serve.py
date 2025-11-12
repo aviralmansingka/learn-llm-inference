@@ -1,8 +1,8 @@
 import modal
 
-app = modal.App("modal-llm")
+app = modal.App("scratch-llm")
 
-image = modal.Image.debian_slim().uv_sync().add_local_python_source("modal_llm")
+image = modal.Image.debian_slim().uv_sync().add_local_python_source("scratch_llm")
 hf_cache_vol = modal.Volume.from_name("huggingface-cache", create_if_missing=True)
 
 @app.function(
@@ -13,7 +13,7 @@ hf_cache_vol = modal.Volume.from_name("huggingface-cache", create_if_missing=Tru
     },
 )
 @modal.asgi_app()
-def modal_llm():
-    from modal_llm.web.fastapi import asgi_app
+def asgi_app():
+    from scratch_llm.web.fastapi import asgi_app
 
     return asgi_app

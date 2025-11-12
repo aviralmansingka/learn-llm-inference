@@ -4,7 +4,7 @@ import uuid
 from typing import Optional
 from pydantic import BaseModel, Field
 
-from modal_llm.runtime.models.engine import EngineRequest, EngineResponse, Message
+from scratch_llm.runtime.models.engine import EngineRequest, EngineResponse, Message
 
 class ChatMessage(BaseModel):
     role: str
