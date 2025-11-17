@@ -4,18 +4,18 @@ from tokenizers import Encoding, Tokenizer
 
 from loguru import logger
 
-from modal_llm.runtime.models.engine import EngineRequest, EngineResponse, UsageStats
-from modal_llm.runtime.models.model import Model, get_model
-from modal_llm.runtime.services.tokenizer import get_tokenizer
+from scratch_llm.runtime.models.engine import EngineRequest, EngineResponse, Message, UsageStats
+from scratch_llm.runtime.services.model import Model, get_model
+from scratch_llm.runtime.services.tokenizer import TokenizerManager, get_tokenizer_manager
 
 
 class Engine:
-    def __init__(self, tokenizer: Tokenizer, model: Model):
-        self.tokenizer = tokenizer
-        self.model= model
+    def __init__(self, tokenizer: TokenizerManager, model: Model):
+        self.tokenizer: TokenizerManager = tokenizer
+        self.model: Model= model
 
     @staticmethod
-    def format_chat(messages: list[dict]) -> str:
+    def format_chat(messages: list[Message]) -> str:
         # TODO append to list and use join for better performance
         formatted = ""
         for message in messages:
@@ -26,16 +26,10 @@ class Engine:
 
     async def process(self, req: EngineRequest) -> EngineResponse: 
         response_content = Engine.format_chat(req.messages)
-        encoding: Encoding = self.tokenizer.encode(response_content)
-
-        # FIX FOR 
-        # The attention mask is not set and cannot be inferred from input because pad token 
-        # is same as eos token. As a consequence, you may observe unexpected behavior. 
-        # Please pass your input's `attention_mask` to obtain reliable results
-        attention_mask = [1 if token_id != self.tokenizer.token_to_id("<pad>") else 0 for token_id in encoding.ids]
+        encoding, attention_mask = self.tokenizer.tokenize(response_content)
 
         output_tokens = await self.model.generate(encoding.ids, attention_mask=attention_mask)
-        final_content: str = self.tokenizer.decode(output_tokens)
+        final_content: str = self.tokenizer.detokenize(output_tokens)
 
         usage_stats = self._calculate_usage_stats(input_tokens=encoding.ids, output_tokens=output_tokens)
         engine_response = EngineResponse(req.model, prompt_response=final_content, usage_stats=usage_stats)
@@ -47,12 +41,10 @@ class Engine:
         total_tokens = prompt_tokens + completion_tokens
         usage_stats = UsageStats(prompt_tokens=prompt_tokens, completion_tokens=completion_tokens, total_tokens=total_tokens)
         return usage_stats
-    
-
 
 @cache
 def get_engine(
-        tokenizer: Tokenizer = Depends(get_tokenizer), # pyright: ignore[reportCallInDefaultInitializer]
+        tokenizer: TokenizerManager = Depends(get_tokenizer_manager), # pyright: ignore[reportCallInDefaultInitializer]
         model: Model = Depends(get_model), # pyright: ignore[reportCallInDefaultInitializer]
 ) -> Engine:
     logger.info("Creating Engine(tokenizer, model)")
